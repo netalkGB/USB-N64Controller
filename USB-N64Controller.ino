@@ -50,14 +50,15 @@ void loop() {
   asm volatile ("nop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\t");
   high();
 
-  for (int j = 0; j < 8; j++) {
+  for (int i = 0; i < 8; i++) {
     while (PINB & mask_);
     asm volatile ("nop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\t");
     asm volatile ("nop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\t");
     buf[7] = (buf[7] << 1) | (PINB & mask) != 0;
     while (!(PINB & mask_));
   }
-  for (int j = 0; j < 8; j++) {
+
+  for (int i = 0; i < 8; i++) {
     while (PINB & mask_);
     asm volatile ("nop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\t");
     asm volatile ("nop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\t");
@@ -65,23 +66,28 @@ void loop() {
     while (!(PINB & mask_));
   }
 
-  for (int i = 0; i < 2; i++) {
-    buf[i] = 0;
-    for (int j = 0; j < 8; j++) {
-      while (PINB & mask_);
-      asm volatile ("nop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\t");
-      asm volatile ("nop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\t");
-      buf[i] = (buf[i] << 1) | (PINB & mask) != 0;
-      while (!(PINB & mask_));
-    }
+  for (int i = 0; i < 8; i++) {
+    while (PINB & mask_);
+    asm volatile ("nop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\t");
+    asm volatile ("nop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\t");
+    buf[0] = (buf[0] << 1) | (PINB & mask) != 0;
+    while (!(PINB & mask_));
   }
-
-  while (PINB & mask_);
-  while (!(PINB & mask_));
-  interrupts();
-
+  
+  for (int i = 0; i < 8; i++) {
+    while (PINB & mask_);
+    asm volatile ("nop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\t");
+    asm volatile ("nop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\t");
+    buf[1] = (buf[1] << 1) | (PINB & mask) != 0;
+    while (!(PINB & mask_));
+  }
+  
+  //  while (PINB & mask_);
+  //  while (!(PINB & mask_));
+  
   buf[0] = buf[0] - 127;
   buf[1] = 128 - buf[1];
   DigiJoystick.setValues(buf);
-  DigiJoystick.delay(5);
+  interrupts();
+  DigiJoystick.delay(3);
 }
