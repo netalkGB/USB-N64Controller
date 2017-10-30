@@ -89,5 +89,5 @@ void loop() {
   buf[1] = 128 - buf[1];
   DigiJoystick.setValues(buf);
   interrupts();
-  DigiJoystick.delay(3);
+  DigiJoystick.delay(10);
 }
